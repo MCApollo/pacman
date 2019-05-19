@@ -1,0 +1,27 @@
+diff -ur pacman-5.1.3/lib/libalpm/util.c pacman-5.1.3+iPhone/lib/libalpm/util.c
+--- pacman-5.1.3/lib/libalpm/util.c	2019-02-28 19:28:53.000000000 -0600
++++ pacman-5.1.3+iPhone/lib/libalpm/util.c	2019-05-19 16:33:40.927089181 -0500
+@@ -33,6 +33,11 @@
+ #include <sys/socket.h>
+ #include <fnmatch.h>
+ #include <poll.h>
++#include <signal.h>
++
++#ifndef MSG_NOSIGNAL
++#define MSG_NOSIGNAL 0x2000
++#endif
+ 
+ /* libarchive */
+ #include <archive.h>
+@@ -556,7 +561,11 @@
+ 	int *i, signals[] = {
+ 		SIGABRT, SIGALRM, SIGBUS, SIGCHLD, SIGCONT, SIGFPE, SIGHUP, SIGILL,
+ 		SIGINT, SIGKILL, SIGPIPE, SIGQUIT, SIGSEGV, SIGSTOP, SIGTERM, SIGTSTP,
++#ifndef __APPLE__
+ 		SIGTTIN, SIGTTOU, SIGUSR1, SIGUSR2, SIGPOLL, SIGPROF, SIGSYS, SIGTRAP,
++#else
++		SIGTTIN, SIGTTOU, SIGUSR1, SIGUSR2, SIGIOT, SIGEMT, SIGPROF, SIGSYS, SIGTRAP,
++#endif
+ 		SIGURG, SIGVTALRM, SIGXCPU, SIGXFSZ,
+ 		0
+ 	};
